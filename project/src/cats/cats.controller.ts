@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Delete, Put, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Put,
+  Param,
+  Patch,
+  HttpException,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
 
 @Controller('cats')
@@ -6,18 +16,20 @@ export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
   @Get()
-  getAllCats(): string {
-    return 'All cats';
+  getAllCat(): string {
+    throw new HttpException('api is broken', 401);
+    return 'All cat';
+  }
+
+  @Get(':id')
+  getOneCat(@Param('id', ParseIntPipe) param: number) {
+    console.log(typeof param);
+    return `one cat ${param}`;
   }
 
   @Post()
   createCat(): string {
     return 'Cat created';
-  }
-
-  @Get(':id')
-  getOneCat(@Param('id') id: string): string {
-    return `one cat ${id}`;
   }
 
   @Delete(':id')
@@ -28,5 +40,10 @@ export class CatsController {
   @Put(':id')
   updateCat(): string {
     return `update cat`;
+  }
+
+  @Patch(':id')
+  updatePartialCat(): string {
+    return `update partial cat`;
   }
 }
